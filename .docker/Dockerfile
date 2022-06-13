@@ -10,7 +10,7 @@ RUN echo "${TZ}" && apk --update add tzdata && \
     echo $TZ > /etc/timezone && \
     apk del tzdata
 
-RUN apk add --no-cache bash msmtp perl wget procps shadow libwebp freetype icu \
+RUN apk add --no-cache bash msmtp perl wget procps shadow libzip libwebp freetype icu \
     libintl patch acl git libcurl libxml2-dev pcre-dev su-exec build-base oniguruma-dev postgresql-dev
 
 RUN apk add --update --no-cache --virtual build-essentials \
@@ -23,6 +23,7 @@ RUN apk add --update --no-cache --virtual build-essentials \
     docker-php-ext-install pcntl && \
     docker-php-ext-install opcache && \
     docker-php-ext-install xml && \
+	docker-php-ext-install zip && \
     apk del build-essentials && rm -rf /usr/src/php*
 
 RUN apk add --no-cache $PHPIZE_DEPS
