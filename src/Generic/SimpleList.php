@@ -3,9 +3,6 @@
 
 namespace Trade\Api\Generic;
 
-
-use http\Exception\InvalidArgumentException;
-
 class SimpleList implements ListInterface, \Countable
 {
     public readonly string $typeOf;
