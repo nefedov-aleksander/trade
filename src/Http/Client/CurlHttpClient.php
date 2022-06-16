@@ -41,14 +41,9 @@ class CurlHttpClient implements HttpClientInterface
 
     private function preparePostFields(ListInterface $params) : string
     {
-        $postFields = [];
+        $postFields = $params->select(fn($x) => [$x->key => $x->value])->toArray();
 
-        foreach ($params->toArray() as $pair)
-        {
-            $postFields[$pair->key] = $pair->value;
-        }
-
-        return json_encode($postFields);
+        return json_encode(array_merge(...$postFields));
     }
 
     private function prepareGetParams(ListInterface $params) : string
