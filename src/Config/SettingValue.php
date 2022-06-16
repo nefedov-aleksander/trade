@@ -19,7 +19,7 @@ class SettingValue implements SettingValueInterface
         {
             return $this->settings[$key];
         }
-        throw new \InvalidArgumentException();
+        throw new \InvalidArgumentException("{$key} not found");
     }
 
     public function getOrDefault($key, $default = null)
