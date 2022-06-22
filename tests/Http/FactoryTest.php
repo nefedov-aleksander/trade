@@ -33,11 +33,11 @@ final class FactoryTest extends TestCase
 
         $headers = $factory->createHeaders([
             'header' => 'value'
-        ], 'api', $signature);
+        ], 'Api', $signature);
 
         $this->assertCount(3, $headers);
         $this->assertEquals('value', $headers->where(fn($x) => $x->key == 'header')->firstOrDefault()?->value);
-        $this->assertEquals('api', $headers->where(fn($x) => $x->key == 'API-ID')->firstOrDefault()?->value);
+        $this->assertEquals('Api', $headers->where(fn($x) => $x->key == 'API-ID')->firstOrDefault()?->value);
         $this->assertEquals($signature->getHash(), $headers->where(fn($x) => $x->key == 'API-SIGN')->firstOrDefault()?->value);
     }
 
