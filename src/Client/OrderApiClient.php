@@ -1,10 +1,10 @@
 <?php
 
 
-namespace Trade\Api\Api;
+namespace Trade\Api\Client;
 
 
-use Trade\Api\Api\Order\CreateOrderRequest;
+use Trade\Api\Client\Order\CreateOrderRequest;
 use Trade\Api\Config\SettingValueInterface;
 use Trade\Api\Generic\ListInterface;
 use Trade\Api\Http\Client\HttpClientInterface;

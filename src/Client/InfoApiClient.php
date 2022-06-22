@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Trade\Api\Api;
+namespace Trade\Api\Client;
 
 
 use Trade\Api\Config\SettingValueInterface;

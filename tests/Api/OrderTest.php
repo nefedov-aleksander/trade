@@ -6,8 +6,8 @@ namespace TradeTest\Http;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Trade\Api\Api\Order\CreateOrderRequest;
-use Trade\Api\Api\OrderApiClient;
+use Trade\Api\Client\Order\CreateOrderRequest;
+use Trade\Api\Client\OrderApiClient;
 use Trade\Api\Config\SettingValue;
 use Trade\Api\Http\Client\CurlHttpClient;
 use Trade\Api\Http\Factory;

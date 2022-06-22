@@ -6,7 +6,7 @@ namespace TradeTest\Api;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Trade\Api\Api\InfoApiClient;
+use Trade\Api\Client\InfoApiClient;
 use Trade\Api\Config\SettingValue;
 use Trade\Api\Http\Client\CurlHttpClient;
 use Trade\Api\Http\Factory;

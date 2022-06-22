@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Trade\Api\Api\Order;
+namespace Trade\Api\Client\Order;
 
 
 class CreateOrderRequest
