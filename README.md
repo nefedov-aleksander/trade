@@ -2,6 +2,7 @@ http://trade.localhost/
 
 serve:
 docker-compose up -d
+docker-compose exec php composer update
 
 run test:
 docker-compose exec php composer test
