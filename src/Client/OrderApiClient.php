@@ -14,6 +14,7 @@ use Trade\Api\Http\Request\HttpRequestType;
 use Trade\Api\Mappers\OrderModelMapper;
 use Trade\Api\Models\CreatedOrderModel;
 use Trade\Api\Models\OrderModel;
+use Trade\Api\Models\OrderStatusModel;
 
 class OrderApiClient
 {
@@ -93,5 +94,36 @@ class OrderApiClient
         }
 
         return $response->map(CreatedOrderModel::class, OrderModelMapper::mapCreateOrder());
+    }
+
+    public function getOrderStatus(int $orderId): OrderStatusModel
+    {
+        $method = 'order_status';
+
+        $params = $this->factory->createParamsFromArray([
+            'order_id' => $orderId
+        ]);
+
+        $signature = $this->factory->createSignature($this->settingValue->getOrThrow('secret'), $method, $params);
+
+        $headers = $this->factory->createHeaders([
+            'Content-Type' => 'application/json'
+        ], $this->settingValue->getOrThrow('api-id'), $signature);
+
+        $request = new HttpRequest(
+            HttpRequestType::Post,
+            "{$this->settingValue->getOrThrow('host')}/{$method}",
+            $params,
+            $headers
+        );
+
+        $response = $this->http->send($request);
+
+        if(!$response->isSuccess())
+        {
+            throw new \Exception($response->getError());
+        }
+
+        return $response->map(OrderStatusModel::class, OrderModelMapper::mapOrderStatus());
     }
 }

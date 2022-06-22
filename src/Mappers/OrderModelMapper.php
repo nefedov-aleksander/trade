@@ -8,7 +8,9 @@ use Trade\Api\Generic\ListInterface;
 use Trade\Api\Generic\SimpleList;
 use Trade\Api\Models\CreatedOrderModel;
 use Trade\Api\Models\Order\OrderItemModel;
+use Trade\Api\Models\Order\TradeModel;
 use Trade\Api\Models\OrderModel;
+use Trade\Api\Models\OrderStatusModel;
 
 final class OrderModelMapper
 {
@@ -61,6 +63,50 @@ final class OrderModelMapper
             $model->value = $data['params']['value'];
             return $model;
         };
+    }
+
+    public static function mapOrderStatus(): \Closure
+    {
+        return function (OrderStatusModel $model, array $data): OrderStatusModel {
+
+            $model->id = $data['order']['id'];
+            $model->date = $data['order']['date'];
+            $model->pair = $data['order']['pair'];
+            $model->action = $data['order']['action'];
+            $model->type = $data['order']['type'];
+            $model->status = $data['order']['status'];
+            $model->amount = $data['order']['amount'];
+            $model->price = $data['order']['price'];
+            $model->value = $data['order']['value'];
+            $model->amountProcessed = $data['order']['amount_processed'];
+            $model->amountRemaining = $data['order']['amount_remaining'];
+            $model->valueProcessed = $data['order']['value_processed'];
+            $model->valueRemaining = $data['order']['value_remaining'];
+            $model->avgPrice = $data['order']['avg_price'];
+            $model->trades = new SimpleList(TradeModel::class);
+
+            foreach ($data['order']['trades'] as $trade)
+            {
+                $model->trades->add(self::mapOrderTradeModel($trade));
+            }
+
+            return $model;
+        };
+    }
+
+    private static function mapOrderTradeModel($trade)
+    {
+        $model = new TradeModel();
+        $model->id = $trade['id'];
+        $model->date = $trade['date'];
+        $model->status = $trade['status'];
+        $model->price = $trade['price'];
+        $model->amount = $trade['amount'];
+        $model->value = $trade['value'];
+        $model->isMaker = $trade['is_maker'];
+        $model->isTaker = $trade['is_taker'];
+        $model->transactionId = $trade['t_transaction_id'];
+        return$model;
     }
 
 }
