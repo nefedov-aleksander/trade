@@ -6,6 +6,7 @@ namespace Trade\Api\Http\Client;
 
 use Trade\Api\Generic\ListInterface;
 use Trade\Api\Http\Request\HttpRequest;
+use Trade\Api\Http\Request\HttpRequestType;
 use Trade\Api\Http\Response\Response;
 use Trade\Api\Http\Response\ResponseInterface;
 
@@ -23,7 +24,7 @@ class CurlHttpClient implements HttpClientInterface
         }
         else
         {
-            $uri .= '?' . $this->prepareGetParams();
+            $uri .= '?' . $this->prepareGetParams($request->getParams());
         }
 
         curl_setopt_array($ch, [
@@ -48,9 +49,7 @@ class CurlHttpClient implements HttpClientInterface
 
     private function prepareGetParams(ListInterface $params) : string
     {
-        $params = $request->getParams()
-            ->select(fn($x) => $x->key . '=' . $x->value)
-            ->toArray();
+        $params = $params->select(fn($x) => $x->key . '=' . $x->value)->toArray();
 
         return implode('&', $params);
     }
