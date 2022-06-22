@@ -1,3 +1,5 @@
+http://trade.localhost/
+
 serve:
 docker-compose up -d
 
