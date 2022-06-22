@@ -7,6 +7,7 @@ namespace Trade\Api\Client;
 use Trade\Api\Client\Order\CreateOrderRequest;
 use Trade\Api\Config\SettingValueInterface;
 use Trade\Api\Generic\ListInterface;
+use Trade\Api\Http\Auth\SignatureInterface;
 use Trade\Api\Http\Client\HttpClientInterface;
 use Trade\Api\Http\FactoryInterface;
 use Trade\Api\Http\Request\HttpRequest;
@@ -43,16 +44,12 @@ class OrderApiClient
             'pair' => $pairs
         ]);
 
-        $signature = $this->factory->createSignature($this->settingValue->getOrThrow('secret'), $method, $params);
-
-        $headers = $this->factory->createHeaders([
-            'Content-Type' => 'application/json'
-        ], $this->settingValue->getOrThrow('api-id'), $signature);
+        $headers = $this->headers($this->signature($method, $params));
 
 
         $request = new HttpRequest(
             HttpRequestType::Post,
-            "{$this->settingValue->getOrThrow('host')}/{$method}",
+            $this->uri($method),
             $params,
             $headers
         );
@@ -73,15 +70,11 @@ class OrderApiClient
 
         $params = $this->factory->createParamsFromArray($request->toArray());
 
-        $signature = $this->factory->createSignature($this->settingValue->getOrThrow('secret'), $method, $params);
-
-        $headers = $this->factory->createHeaders([
-            'Content-Type' => 'application/json'
-        ], $this->settingValue->getOrThrow('api-id'), $signature);
+        $headers = $this->headers($this->signature($method, $params));
 
         $request = new HttpRequest(
             HttpRequestType::Post,
-            "{$this->settingValue->getOrThrow('host')}/{$method}",
+            $this->uri($method),
             $params,
             $headers
         );
@@ -104,15 +97,11 @@ class OrderApiClient
             'order_id' => $orderId
         ]);
 
-        $signature = $this->factory->createSignature($this->settingValue->getOrThrow('secret'), $method, $params);
-
-        $headers = $this->factory->createHeaders([
-            'Content-Type' => 'application/json'
-        ], $this->settingValue->getOrThrow('api-id'), $signature);
+        $headers = $this->headers($this->signature($method, $params));
 
         $request = new HttpRequest(
             HttpRequestType::Post,
-            "{$this->settingValue->getOrThrow('host')}/{$method}",
+            $this->uri($method),
             $params,
             $headers
         );
@@ -125,5 +114,22 @@ class OrderApiClient
         }
 
         return $response->map(OrderStatusModel::class, OrderModelMapper::mapOrderStatus());
+    }
+
+    private function signature(string $method, ListInterface $params): SignatureInterface
+    {
+        return $this->factory->createSignature($this->settingValue->getOrThrow('secret'), $method, $params);;
+    }
+
+    private function headers(SignatureInterface $signature): ListInterface
+    {
+        return $this->factory->createHeaders([
+            'Content-Type' => 'application/json'
+        ], $this->settingValue->getOrThrow('api-id'), $signature);
+    }
+
+    private function uri(string $method): string
+    {
+        return "{$this->settingValue->getOrThrow('host')}/{$method}";
     }
 }
