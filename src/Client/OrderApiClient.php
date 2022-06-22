@@ -5,6 +5,7 @@ namespace Trade\Api\Client;
 
 
 use Trade\Api\Client\Order\CreateOrderRequest;
+use Trade\Api\Client\Order\MyOrderRequest;
 use Trade\Api\Config\SettingValueInterface;
 use Trade\Api\Generic\ListInterface;
 use Trade\Api\Http\Auth\SignatureInterface;
@@ -14,6 +15,7 @@ use Trade\Api\Http\Request\HttpRequest;
 use Trade\Api\Http\Request\HttpRequestType;
 use Trade\Api\Mappers\OrderModelMapper;
 use Trade\Api\Models\CreatedOrderModel;
+use Trade\Api\Models\MyOrderModel;
 use Trade\Api\Models\OrderModel;
 use Trade\Api\Models\OrderStatusModel;
 
@@ -114,6 +116,35 @@ class OrderApiClient
         }
 
         return $response->map(OrderStatusModel::class, OrderModelMapper::mapOrderStatus());
+    }
+
+    /**
+     * @return ListInterface<OrderModel>
+     */
+    public function getMyOrders(MyOrderRequest $request): ListInterface
+    {
+        $method = 'my_orders';
+
+        $params = $this->factory->createParamsFromArray($request->toArray());
+
+        $headers = $this->headers($this->signature($method, $params));
+
+
+        $request = new HttpRequest(
+            HttpRequestType::Post,
+            $this->uri($method),
+            $params,
+            $headers
+        );
+
+        $response = $this->http->send($request);
+
+        if(!$response->isSuccess())
+        {
+            throw new \Exception($response->getError());
+        }
+
+        return $response->map(MyOrderModel::class, OrderModelMapper::mapMyOrders());
     }
 
     private function signature(string $method, ListInterface $params): SignatureInterface

@@ -7,6 +7,7 @@ namespace Trade\Api\Mappers;
 use Trade\Api\Generic\ListInterface;
 use Trade\Api\Generic\SimpleList;
 use Trade\Api\Models\CreatedOrderModel;
+use Trade\Api\Models\MyOrderModel;
 use Trade\Api\Models\Order\OrderItemModel;
 use Trade\Api\Models\Order\TradeModel;
 use Trade\Api\Models\OrderModel;
@@ -107,6 +108,34 @@ final class OrderModelMapper
         $model->isTaker = $trade['is_taker'];
         $model->transactionId = $trade['t_transaction_id'];
         return$model;
+    }
+
+    public static function mapMyOrders(): \Closure
+    {
+        /**
+         * @return ListInterface<MyOrderModel>
+         */
+        return function (MyOrderModel $model, array $data): ListInterface {
+            $list = new SimpleList($model::class);
+            foreach ($data['items'] as $item) {
+                $order = clone $model;
+                $order->id = $item['id'];
+                $order->date = $item['date'];
+                $order->pair = $item['pair'];
+                $order->action = $item['action'];
+                $order->type = $item['type'];
+                $order->amount = $item['amount'];
+                $order->price = $item['price'];
+                $order->value = $item['value'];
+                $order->amountProcessed = $item['amount_processed'];
+                $order->amountRemaining = $item['amount_remaining'];
+                $order->valueProcessed = $item['value_processed'];
+                $order->valueRemaining = $item['value_remaining'];
+
+                $list->add($order);
+            }
+            return $list;
+        };
     }
 
 }

@@ -1,0 +1,21 @@
+<?php
+
+
+namespace Trade\Api\Models;
+
+
+class MyOrderModel
+{
+    public int $id;
+    public int $date;
+    public string $pair;
+    public string $action;
+    public string $type;
+    public float $amount;
+    public float $price;
+    public float $value;
+    public float $amountProcessed;
+    public float $amountRemaining;
+    public float $valueProcessed;
+    public float $valueRemaining;
+}

@@ -7,6 +7,7 @@ namespace TradeTest\Http;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Trade\Api\Client\Order\CreateOrderRequest;
+use Trade\Api\Client\Order\MyOrderRequest;
 use Trade\Api\Client\OrderApiClient;
 use Trade\Api\Config\SettingValue;
 use Trade\Api\Http\Client\CurlHttpClient;
@@ -119,5 +120,50 @@ final class OrderTest extends TestCase
 
         $this->assertEquals(37054293, $order->id);
         $this->assertCount(1, $order->trades);
+    }
+
+    public function testGetMyOrders()
+    {
+        $responseMock = new Response("{
+          \"success\": true,
+          \"items\": {
+            \"36989287\": {
+              \"id\": \"36989287\",
+              \"date\": 1644391218,
+              \"pair\": \"TRX_USD\",
+              \"action\": \"buy\",
+              \"type\": \"limit\",
+              \"amount\": \"10.000000\",
+              \"price\": \"0.05000\",
+              \"value\": \"0.50\",
+              \"amount_processed\": \"0.000000\",
+              \"amount_remaining\": \"10.000000\",
+              \"value_processed\": \"0.00\",
+              \"value_remaining\": \"0.50\"
+            },
+            \"36989322\": {
+              \"id\": \"36989322\",
+              \"date\": 1644391269,
+              \"pair\": \"TRX_USD\",
+              \"action\": \"buy\",
+              \"type\": \"stop_limit\",
+              \"amount\": \"10.000000\",
+              \"price\": \"0.05000\",
+              \"value\": \"0.50\",
+              \"amount_processed\": \"0.000000\",
+              \"amount_remaining\": \"10.000000\",
+              \"value_processed\": \"0.00\",
+              \"value_remaining\": \"0.50\",
+              \"stop_price\": \"0.04000\"
+            }
+          }
+        }");
+
+        $this->http->method('send')->willReturn($responseMock);
+
+        $client = new OrderApiClient($this->http, $this->settings, new Factory());
+
+        $list = $client->getMyOrders(new MyOrderRequest());
+        $this->assertCount(2, $list);
     }
 }
