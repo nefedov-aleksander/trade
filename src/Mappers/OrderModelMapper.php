@@ -6,6 +6,7 @@ namespace Trade\Api\Mappers;
 
 use Trade\Api\Generic\ListInterface;
 use Trade\Api\Generic\SimpleList;
+use Trade\Api\Models\CreatedOrderModel;
 use Trade\Api\Models\Order\OrderItemModel;
 use Trade\Api\Models\OrderModel;
 
@@ -46,6 +47,20 @@ final class OrderModelMapper
         $orderItem->amount = (float) $item['amount'];
         $orderItem->value = (float) $item['value'];
         return $orderItem;
+    }
+
+    public static function mapCreateOrder(): \Closure
+    {
+        return function (CreatedOrderModel $model, array $data): CreatedOrderModel {
+            $model->id = $data['order_id'];
+            $model->pair = $data['params']['pair'];
+            $model->type = $data['params']['type'];
+            $model->action = $data['params']['action'];
+            $model->amount = $data['params']['amount'];
+            $model->price = $data['params']['price'];
+            $model->value = $data['params']['value'];
+            return $model;
+        };
     }
 
 }
