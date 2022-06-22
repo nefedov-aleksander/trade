@@ -1,6 +1,11 @@
-<?php
+serve:
+docker-compose up -d
 
-require_once './../vendor/autoload.php';
+run test:
+docker-compose exec php composer test
+
+
+usage:
 
 use Trade\Api\Client\InfoApiClient;
 use Trade\Api\Config\SettingValue;
@@ -16,8 +21,8 @@ $settings = new SettingValue([
 $http = new CurlHttpClient();
 
 $client = new InfoApiClient(
-    new CurlHttpClient(),
-    $settings,
+    new CurlHttpClient(), 
+    $settings, 
     new Factory());
 
-echo '<pre>' , var_dump($client->getInfo()) , '</pre>';
+$info = $client->getInfo();
